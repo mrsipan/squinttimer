@@ -29,9 +29,10 @@
 
 (defn minutes->handle-xy [minutes]
   "Convert minutes (0-30) to x,y for handle center.
-   angle from 12 o'clock clockwise: (30 - minutes) / 30 * 2π
-   minutes=30 -> angle=0 (top), minutes=15 -> angle=π (bottom), minutes=0 -> angle=2π (top)"
-  (let [angle (* (/ (- 30 minutes) 30) 2 js/Math.PI)
+   angle clockwise from top = minutes / 30 * 2π
+   minutes=30 -> angle=2π (top), minutes=15 -> angle=π (bottom), minutes=0 -> angle=0 (top)
+   x = center + radius * sin(angle), y = center - radius * cos(angle)"
+  (let [angle (* (/ minutes 30) 2 js/Math.PI)
         hx (+ center (* radius (js/Math.sin angle)))
         hy (- center (* radius (js/Math.cos angle)))]
     {:x hx :y hy}))
@@ -91,14 +92,11 @@
   (let [{:keys [total-seconds remaining-seconds running? setting?]} @state
         time-str (format-time remaining-seconds)
         {:keys [disc time-div handle btn-start btn-reset]} @dom-refs
-        xy (minutes->handle-xy (/ remaining-seconds 60))
+        minutes (/ remaining-seconds 60)
+        xy (minutes->handle-xy minutes)
         pct (if setting?
-              ;; During drag: show percentage relative to max (30 min = 1800 sec)
-              ;; because total-seconds == remaining-seconds during drag
-              (let [v (* (/ total-seconds max-seconds) 100)]
-                (if (neg? v) 0 (if (> v 100) 100 v)))
-              ;; Running or paused: normal countdown percentage
-              (percentage))]
+              (* (/ total-seconds max-seconds) 100)
+              (* (/ remaining-seconds max-seconds) 100))]
     ;; disc background
     (set! (.-background (.-style disc)) (str "conic-gradient(red 0% " pct "%, transparent " pct "% 100%)"))
     ;; time text
