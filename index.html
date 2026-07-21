@@ -1,212 +1,256 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Visual Timer</title>
-<script type="importmap">{"imports":{"squint-cljs/":"https://unpkg.com/squint-cljs/"}}</script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#fff;min-height:100vh;display:flex;justify-content:center;align-items:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
-#app{text-align:center}
-button{padding:10px 24px;font-size:16px;border-radius:8px;border:2px solid #cc0000;background:white;color:#cc0000;cursor:pointer;font-weight:bold;margin:0 8px}
-button:hover{background:#fff0f0}
-</style></head><body><div id="app"></div>
-<script type="module">
-const source = document.getElementById('squint-src').textContent;
-const {compileString} = await import('https://unpkg.com/squint-cljs/index.js');
-const js = compileString(source + '\n(app.core/init)\n', {core_module:'squint-cljs/core.js'});
-await import(URL.createObjectURL(new Blob([js], {type:'application/javascript'})));
-</script>
-<script type="text/plain" id="squint-src">
-(ns app.core)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Timer for Kids</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: #fff5f0;
+            color: #333;
+            line-height: 1.6;
+        }
+        .wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background: linear-gradient(135deg, #e63946, #c1121f);
+            color: white;
+            padding: 40px 0 60px;
+            text-align: center;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            box-shadow: 0 8px 30px rgba(230, 57, 70, 0.3);
+        }
+        header h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.3rem;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto 20px;
+            opacity: 0.95;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            backdrop-filter: blur(3px);
+        }
+        section.hero-desc {
+            text-align: center;
+            padding: 50px 20px 30px;
+        }
+        section.hero-desc h2 {
+            font-size: 2rem;
+            color: #c1121f;
+            margin-bottom: 15px;
+        }
+        section.hero-desc p {
+            font-size: 1.2rem;
+            max-width: 750px;
+            margin: 0 auto;
+            color: #555;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            padding: 20px 0 50px;
+        }
+        .feature-card {
+            background: white;
+            border-radius: 24px;
+            padding: 30px 20px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+            transition: all 0.2s ease;
+            border: 1px solid #f0d6d4;
+            text-align: center;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(230, 57, 70, 0.12);
+        }
+        .feature-icon {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .feature-card h3 {
+            font-size: 1.4rem;
+            color: #c1121f;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .feature-card p {
+            font-size: 1rem;
+            color: #666;
+            font-weight: 400;
+        }
+        .cta-section {
+            text-align: center;
+            padding: 30px 0 50px;
+        }
+        .cta-section p {
+            font-size: 1.3rem;
+            color: #444;
+            margin-bottom: 25px;
+        }
+        .btn-try {
+            display: inline-block;
+            background: #e63946;
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 600;
+            padding: 18px 50px;
+            border-radius: 60px;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(230, 57, 70, 0.35);
+            transition: all 0.2s ease;
+        }
+        .btn-try:hover {
+            background: #c1121f;
+            transform: scale(1.02);
+            box-shadow: 0 12px 28px rgba(230, 57, 70, 0.4);
+        }
+        .repo-link {
+            display: inline-block;
+            margin-top: 30px;
+            background: #f5f0ee;
+            padding: 12px 28px;
+            border-radius: 40px;
+            color: #c1121f;
+            text-decoration: none;
+            font-weight: 500;
+            border: 1px solid #e0cac8;
+            transition: 0.2s;
+        }
+        .repo-link:hover {
+            background: #f0e0dd;
+        }
+        .badge-section {
+            text-align: center;
+            padding: 10px 0 30px;
+        }
+        .badge {
+            display: inline-block;
+            background: #2d2d2d;
+            color: #ebdbb2;
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .badge span {
+            color: #fbb829;
+        }
+        footer {
+            background: #f0e6e2;
+            text-align: center;
+            padding: 30px 20px;
+            color: #777;
+            font-size: 0.95rem;
+            border-top: 2px solid #e6d3cf;
+            margin-top: 30px;
+            border-radius: 30px 30px 0 0;
+        }
+        footer a {
+            color: #c1121f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        @media (max-width: 600px) {
+            header h1 { font-size: 2.4rem; }
+            header p { font-size: 1.1rem; }
+            .btn-try { font-size: 1.2rem; padding: 16px 35px; }
+            .features { gap: 18px; }
+            .feature-card { padding: 24px 16px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="wrapper">
+            <h1>⏳ Visual Timer for Kids</h1>
+            <p>A countdown timer that shows time passing — perfect for little ones who can't read clocks yet!</p>
+            <div class="hero-badge">✨ No reading required &nbsp;•&nbsp; Just watch the red disc shrink</div>
+        </div>
+    </header>
 
-;; ── State ──────────────────────────────────────────────────────────
-(defonce state (atom {:total-seconds (* 30 60)
-                      :remaining-seconds (* 30 60)
-                      :running? false
-                      :setting? false
-                      :dragging? false}))
+    <section class="hero-desc wrapper">
+        <h2>What is it?</h2>
+        <p>Imagine a bright red circle that slowly gets smaller clockwise — like a pizza being eaten, but for time! Kids instantly <em>see</em> how much time is left. Simple, friendly, and fun.</p>
+    </section>
 
-(defonce timer-id (atom nil))
+    <div class="wrapper">
+        <div class="features">
+            <div class="feature-card">
+                <span class="feature-icon">👆</span>
+                <h3>Drag to set time</h3>
+                <p>Just drag the slider or tap the numbers — up to 30 minutes. No complicated menus.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🕒</span>
+                <h3>Big MM:SS display</h3>
+                <p>Large, clear numbers so even grown-ups can read it from across the room.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">⏯️</span>
+                <h3>Start / Pause / Reset</h3>
+                <p>Easy buttons with friendly icons. Pause for snack breaks, reset to start over.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🔔</span>
+                <h3>Beep at zero</h3>
+                <p>A cheerful beep sounds when time's up — no shouting needed!</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">⏱️</span>
+                <h3>Max 30 minutes</h3>
+                <p>Perfect for toothbrushing, reading, playtime, or a short nap.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🌐</span>
+                <h3>Works in browser</h3>
+                <p>No install! Open the page on any phone, tablet, or computer — it just works.</p>
+            </div>
+        </div>
+    </div>
 
-;; ── Helpers ────────────────────────────────────────────────────────
-(def max-seconds 1800)
+    <div class="cta-section wrapper">
+        <p>Ready to give it a try? 🎈</p>
+        <a href="./timer.html" class="btn-try">👉 Try Visual Timer</a>
+        <br>
+        <a href="https://github.com/mrsipan/squinttimer" class="repo-link" target="_blank">📂 View on GitHub</a>
+    </div>
 
-(defn format-time [secs]
-  (let [m (int (/ secs 60))
-        s (mod secs 60)]
-    (str (if (< m 10) "0" "") m ":" (if (< s 10) "0" "") s)))
+    <div class="badge-section wrapper">
+        <div class="badge">⚡ Built with <span>Squint ClojureScript</span></div>
+    </div>
 
-(defn percentage []
-  (let [{:keys [total-seconds remaining-seconds]} @state]
-    (if (zero? total-seconds)
-      0
-      (* (/ remaining-seconds total-seconds) 100))))
-
-;; ── Handle position math ───────────────────────────────────────────
-(def center 150)
-(def radius 150)
-
-(defn minutes->handle-xy [minutes]
-  "Convert minutes (0-30) to x,y for handle center.
-   angle clockwise from top = minutes / 30 * 2π
-   minutes=30 -> angle=2π (top), minutes=15 -> angle=π (bottom), minutes=0 -> angle=0 (top)
-   x = center + radius * sin(angle), y = center - radius * cos(angle)"
-  (let [angle (* (/ minutes 30) 2 js/Math.PI)
-        hx (+ center (* radius (js/Math.sin angle)))
-        hy (- center (* radius (js/Math.cos angle)))]
-    {:x hx :y hy}))
-
-(defn mouse->minutes [client-x client-y]
-  "Convert mouse position relative to disc center to minutes (0-30).
-   minutes = 30 - (atan2(dy,dx) + π/2) * 30/π, normalized to 0-30."
-  (let [disc (js/document.getElementById "timer-disc")
-        rect (.getBoundingClientRect disc)
-        cx (+ (.-left rect) (/ (.-width rect) 2))
-        cy (+ (.-top rect) (/ (.-height rect) 2))
-        dx (- client-x cx)
-        dy (- client-y cy)
-        raw (* (+ (js/Math.atan2 dy dx) (/ js/Math.PI 2)) (/ 30 js/Math.PI))
-        normalized (mod raw 30)]
-    normalized))
-
-;; ── DOM references (created once) ──────────────────────────────────
-(defonce dom-refs (atom nil))
-
-(defn create-dom! []
-  (let [app (js/document.getElementById "app")
-        disc (js/document.createElement "div")
-        time-div (js/document.createElement "div")
-        handle (js/document.createElement "div")
-        btn-bar (js/document.createElement "div")
-        btn-start (js/document.createElement "button")
-        btn-reset (js/document.createElement "button")]
-    ;; disc
-    (set! (.-id disc) "timer-disc")
-    (set! (.-innerHTML disc) "")
-    (set! (.-style disc) "width:300px;height:300px;border-radius:50%;border:4px solid #ccc;position:relative;cursor:pointer;")
-    ;; time display centered
-    (set! (.-id time-div) "time-display")
-    (set! (.-style time-div) "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:3rem;font-weight:bold;color:#333;pointer-events:none;")
-    (.appendChild disc time-div)
-    ;; handle
-    (set! (.-id handle) "timer-handle")
-    (set! (.-style handle) "position:absolute;width:24px;height:24px;border-radius:50%;background:white;border:3px solid red;cursor:grab;z-index:10;transform:translate(-50%,-50%);pointer-events:auto;")
-    (.appendChild disc handle)
-    ;; buttons
-    (set! (.-id btn-start) "btn-start")
-    (set! (.-id btn-reset) "btn-reset")
-    (set! (.-style btn-bar) "margin-top:1.5rem;display:flex;gap:1rem;")
-    (.appendChild btn-bar btn-start)
-    (.appendChild btn-bar btn-reset)
-    ;; assemble
-    (set! (.-style app) "display:flex;flex-direction:column;align-items:center;font-family:sans-serif;padding:2rem;")
-    (set! (.-innerHTML app) "")
-    (.appendChild app disc)
-    (.appendChild app btn-bar)
-    ;; store refs
-    (reset! dom-refs {:disc disc :time-div time-div :handle handle :btn-start btn-start :btn-reset btn-reset})))
-
-;; ── Update UI (no innerHTML replacement) ───────────────────────────
-(defn update-ui []
-  (let [{:keys [total-seconds remaining-seconds running? setting?]} @state
-        time-str (format-time remaining-seconds)
-        {:keys [disc time-div handle btn-start btn-reset]} @dom-refs
-        minutes (/ remaining-seconds 60)
-        xy (minutes->handle-xy minutes)
-        pct (if setting?
-              (* (/ total-seconds max-seconds) 100)
-              (* (/ remaining-seconds max-seconds) 100))]
-    ;; disc background
-    (set! (.-background (.-style disc)) (str "conic-gradient(red 0% " pct "%, transparent " pct "% 100%)"))
-    ;; time text
-    (set! (.-textContent time-div) time-str)
-    ;; handle position
-    (set! (.-left (.-style handle)) (str (:x xy) "px"))
-    (set! (.-top (.-style handle)) (str (:y xy) "px"))
-    ;; button text
-    (set! (.-textContent btn-start) (if running? "PAUSE" "START"))
-    (set! (.-textContent btn-reset) "RESET")))
-
-;; ── Countdown ──────────────────────────────────────────────────────
-(defn start-countdown []
-  (when (nil? @timer-id)
-    (reset! timer-id (js/setInterval
-      (fn []
-        (let [s @state]
-          (when (and (:running? s) (> (:remaining-seconds s) 0))
-            (swap! state update :remaining-seconds dec)
-            (update-ui))
-          (when (and (:running? s) (zero? (:remaining-seconds s)))
-            (swap! state assoc :running? false)
-            (play-beep)
-            (update-ui))))
-      1000))))
-
-(defn stop-countdown []
-  (when @timer-id
-    (js/clearInterval @timer-id)
-    (reset! timer-id nil)))
-
-(defn play-beep []
-  "Play a short beep sound using Web Audio API."
-  (try
-    (let [ctx (js/AudioContext.)
-          osc (.createOscillator ctx)
-          gain (.createGain ctx)]
-      (.connect osc gain)
-      (.connect gain (.-destination ctx))
-      (set! (.-value (.-frequency osc)) 880)
-      (set! (.-value (.-gain gain)) 0.3)
-      (.start osc)
-      (.stop osc (+ (.-currentTime ctx) 0.3)))
-    (catch js/Error _)))
-
-;; ── Event handlers ─────────────────────────────────────────────────
-(defn handle-start []
-  (let [s @state]
-    (if (:running? s)
-      (do (swap! state assoc :running? false) (stop-countdown) (update-ui))
-      (do (swap! state assoc :running? true) (start-countdown) (update-ui)))))
-
-(defn handle-reset []
-  (let [s @state]
-    (stop-countdown)
-    (swap! state assoc :running? false :remaining-seconds (:total-seconds s))
-    (update-ui)))
-
-;; ── Handle drag ────────────────────────────────────────────────────
-(defn handle-mousedown [e]
-  (let [target (.-target e)
-        handle (js/document.getElementById "timer-handle")]
-    (when (or (= target handle) (.contains handle target))
-      (.preventDefault e)
-      (swap! state assoc :dragging? true :setting? true)
-      (let [mins (mouse->minutes (.-clientX e) (.-clientY e))
-            total-secs (int (* mins 60))]
-        (swap! state assoc :total-seconds total-secs :remaining-seconds total-secs)
-        (update-ui)))))
-
-(defn handle-mousemove [e]
-  (when (:dragging? @state)
-    (.preventDefault e)
-    (let [mins (mouse->minutes (.-clientX e) (.-clientY e))
-          total-secs (int (* mins 60))]
-      (swap! state assoc :total-seconds total-secs :remaining-seconds total-secs)
-      (update-ui))))
-
-(defn handle-mouseup [e]
-  (when (:dragging? @state)
-    (swap! state assoc :dragging? false :setting? false)))
-
-;; ── Init ───────────────────────────────────────────────────────────
-(defn init []
-  (create-dom!)
-  (update-ui)
-  (let [handle (js/document.getElementById "timer-handle")]
-    (.addEventListener handle "mousedown" handle-mousedown))
-  (.addEventListener js/document "mousemove" handle-mousemove)
-  (.addEventListener js/document "mouseup" handle-mouseup)
-  (.addEventListener (js/document.getElementById "btn-start") "click" handle-start)
-  (.addEventListener (js/document.getElementById "btn-reset") "click" handle-reset))
-
-(init)
-
-</script>
-</body></html>
+    <footer>
+        <p>© 2025 Visual Timer for Kids &nbsp;•&nbsp; Licensed under <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache 2.0</a></p>
+        <p style="margin-top:6px; font-size:0.85rem;">Made with ❤️ for little learners and their grown-ups</p>
+    </footer>
+</body>
+</html>
