@@ -99,7 +99,8 @@
     (set! (.-left (.-style handle)) (str (:x xy) "px"))
     (set! (.-top (.-style handle)) (str (:y xy) "px"))
     ;; button text
-    (set! (.-textContent btn-start) (if running? "PAUSE" "START"))))
+    (set! (.-textContent btn-start) (if running? "PAUSE" "START"))
+    (set! (.-textContent btn-reset) "RESET")))
 
 ;; ── Countdown ──────────────────────────────────────────────────────
 (defn start-countdown []
