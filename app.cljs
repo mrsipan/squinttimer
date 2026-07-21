@@ -10,6 +10,8 @@
 (defonce timer-id (atom nil))
 
 ;; ── Helpers ────────────────────────────────────────────────────────
+(def max-seconds 1800)
+
 (defn format-time [secs]
   (let [m (int (/ secs 60))
         s (mod secs 60)]
@@ -86,11 +88,17 @@
 
 ;; ── Update UI (no innerHTML replacement) ───────────────────────────
 (defn update-ui []
-  (let [{:keys [total-seconds remaining-seconds running?]} @state
-        pct (percentage)
+  (let [{:keys [total-seconds remaining-seconds running? setting?]} @state
         time-str (format-time remaining-seconds)
         {:keys [disc time-div handle btn-start btn-reset]} @dom-refs
-        xy (minutes->handle-xy (/ remaining-seconds 60))]
+        xy (minutes->handle-xy (/ remaining-seconds 60))
+        pct (if setting?
+              ;; During drag: show percentage relative to max (30 min = 1800 sec)
+              ;; because total-seconds == remaining-seconds during drag
+              (let [v (* (/ total-seconds max-seconds) 100)]
+                (if (neg? v) 0 (if (> v 100) 100 v)))
+              ;; Running or paused: normal countdown percentage
+              (percentage))]
     ;; disc background
     (set! (.-background (.-style disc)) (str "conic-gradient(red 0% " pct "%, transparent " pct "% 100%)"))
     ;; time text
