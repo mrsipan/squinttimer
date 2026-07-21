@@ -2,6 +2,8 @@
 
 A browser-based visual countdown timer inspired by the [Time Timer](https://www.timetimer.com/). A large red disc shrinks clockwise as time runs out — intuitive for kids who can't read clocks yet.
 
+🔗 **Live site:** [mrsipan.github.io/squinttimer](https://mrsipan.github.io/squinttimer/)
+
 Built in [Squint ClojureScript](https://github.com/squint-cljs/squint) and developed with the [cljsquintbrowser](https://github.com/earendil/cljsquintbrowser) AI agent.
 
 ## Quick Start
@@ -26,7 +28,8 @@ python3 -m http.server 9090
 
 | File | Purpose |
 |---|---|
-| `index.html` | Standalone (source baked in) |
+| `index.html` | Landing page |
+| `timer.html` | Standalone timer app (source baked in) |
 | `app.cljs` | Squint ClojureScript source |
 
 ## How It Works
