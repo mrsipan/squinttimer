@@ -46,9 +46,9 @@
         cy (+ (.-top rect) (/ (.-height rect) 2))
         dx (- client-x cx)
         dy (- client-y cy)
-        raw (- 30 (* (+ (js/Math.atan2 dy dx) (/ js/Math.PI 2)) (/ 30 js/Math.PI)))
+        raw (* (+ (js/Math.atan2 dy dx) (/ js/Math.PI 2)) (/ 30 js/Math.PI))
         normalized (mod raw 30)]
-    (if (neg? normalized) (+ normalized 30) normalized)))
+    normalized))
 
 ;; ── DOM references (created once) ──────────────────────────────────
 (defonce dom-refs (atom nil))
@@ -119,6 +119,7 @@
             (update-ui))
           (when (and (:running? s) (zero? (:remaining-seconds s)))
             (swap! state assoc :running? false)
+            (play-beep)
             (update-ui))))
       1000))))
 
@@ -126,6 +127,20 @@
   (when @timer-id
     (js/clearInterval @timer-id)
     (reset! timer-id nil)))
+
+(defn play-beep []
+  "Play a short beep sound using Web Audio API."
+  (try
+    (let [ctx (js/AudioContext.)
+          osc (.createOscillator ctx)
+          gain (.createGain ctx)]
+      (.connect osc gain)
+      (.connect gain (.-destination ctx))
+      (set! (.-value (.-frequency osc)) 880)
+      (set! (.-value (.-gain gain)) 0.3)
+      (.start osc)
+      (.stop osc (+ (.-currentTime ctx) 0.3)))
+    (catch js/Error _)))
 
 ;; ── Event handlers ─────────────────────────────────────────────────
 (defn handle-start []
